@@ -18,4 +18,10 @@ RSpec.describe Day05 do
       expect(Day05.part_1).to eq 913
     end
   end
+
+  context "part 2" do
+    it "calculates the correct answer for the input file" do
+      expect(Day05.part_2).to eq 717
+    end
+  end
 end

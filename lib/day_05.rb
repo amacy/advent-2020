@@ -3,7 +3,20 @@ class Day05
   COLUMNS = 8
 
   def self.part_1(input=File.new("config/day_05.txt").read)
-    tickets = _parse_input(input)
+    _calculate_seat_ids(_parse_input(input)).max
+  end
+
+  def self.part_2(input=File.new("config/day_05.txt").read)
+    seat_ids = _calculate_seat_ids(_parse_input(input)).sort
+
+    seat_ids.each_with_index do |seat_id, index|
+      if seat_ids[index + 1] == seat_id + 2
+        return seat_id + 1
+      end
+    end
+  end
+
+  def self._calculate_seat_ids(tickets)
     seat_ids = []
 
     tickets.each do |ticket|
@@ -25,7 +38,7 @@ class Day05
       seat_ids << first_row * 8 + first_column
     end
 
-    seat_ids.max
+    seat_ids
   end
 
   def self._half(instruction, x, y)
