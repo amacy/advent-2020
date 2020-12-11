@@ -12,7 +12,30 @@ class Day09
     end
   end
 
-  def self.part_2(input=File.new("config/day_09.txt").read)
+  def self.part_2(input=File.new("config/day_09.txt").read, preamble=25)
+    numbers = _parse_input(input)
+    invalid_number = part_1(input, preamble)
+
+    numbers.each_with_index do |n, index|
+      next_index = index + 1
+      sum = 0
+      numbers_equaling_sum = []
+
+      loop do
+        sum += numbers[next_index]
+        numbers_equaling_sum << numbers[next_index]
+
+        if sum == invalid_number
+          return numbers_equaling_sum.sort[0] + numbers_equaling_sum.sort[-1]
+        elsif sum > invalid_number
+          sum = 0
+          numbers_equaling_sum = []
+          break
+        end
+
+        next_index += 1
+      end
+    end
   end
 
   def self._previous_sums(numbers, preamble, current_index)
