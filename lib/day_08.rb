@@ -8,7 +8,6 @@ class Day08
 
   def self.part_2(input=File.new("config/day_08.txt").read)
     original_instructions = _parse_input(input)
-
     index = 0
 
     loop do
@@ -31,7 +30,6 @@ class Day08
         next
       end
 
-      # binding.pry if index == 8
       acc, offset = _execute_instructions(instructions)
 
       if offset == original_instructions.length
