@@ -1,6 +1,5 @@
 class Day07
   MY_BAG = "shiny gold"
-
   Bag = Struct.new(:name, :contents)
 
   def self.part_1(input=File.new("config/day_07.txt").read)
@@ -24,6 +23,18 @@ class Day07
   end
 
   def self.part_2(input=File.new("config/day_07.txt").read)
+    bags = _parse_input(input)
+
+    current_bag = bags[MY_BAG]
+
+    _count_contained_bags(current_bag, bags, 0)
+  end
+
+  def self._count_cointained_bags(current_bag, bags, total_count)
+    additional = 0
+    bags[current_bag.name].contents.each do |bag, count|
+
+    end
   end
 
   def self._navigate_bags(bags, bag_contents)
@@ -35,7 +46,6 @@ class Day07
       else
         result = _navigate_bags(bags, bags[inner_bag_name].contents)
         return result if result == 1
-        result
       end
     end
     0
