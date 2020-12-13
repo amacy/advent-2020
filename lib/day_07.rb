@@ -25,16 +25,20 @@ class Day07
   def self.part_2(input=File.new("config/day_07.txt").read)
     bags = _parse_input(input)
 
-    current_bag = bags[MY_BAG]
-
-    _count_contained_bags(current_bag, bags, 0)
+    _traverse(bags[MY_BAG], bags)
   end
 
-  def self._count_cointained_bags(current_bag, bags, total_count)
-    additional = 0
-    bags[current_bag.name].contents.each do |bag, count|
-
+  def self._traverse(current_bag, bags)
+    total = 0
+    current_bag.contents.each do |inner_bag_name, count|
+      inner_bag = bags[inner_bag_name]
+      if inner_bag.contents.values.sum == 0
+        total += count
+      else
+        total += count * _traverse(inner_bag, bags)
+      end
     end
+    total
   end
 
   def self._navigate_bags(bags, bag_contents)
@@ -69,7 +73,7 @@ class Day07
         count = matches[1]
         _bag_name = matches[2]
 
-        hash[_bag_name] = count
+        hash[_bag_name] = count.to_i
         hash
       end
 
