@@ -25,16 +25,26 @@ RSpec.describe Day11 do
     end
   end
 
-  # context "part 2" do
-  #   it "calculates the correct answer for the sample input" do
-  #     input = <<~INPUT
-  #     INPUT
-  #
-  #     expect(Day11.part_2(input)).to eq 62
-  #   end
-  #
-  #   it "calculates the correct answer for the input file" do
-  #     expect(Day11.part_2).to eq 20532569
-  #   end
-  # end
+  context "part 2" do
+    it "calculates the correct answer for the sample input" do
+      input = <<~INPUT
+        L.LL.LL.LL
+        LLLLLLL.LL
+        L.L.L..L..
+        LLLL.LL.LL
+        L.LL.LL.LL
+        L.LLLLL.LL
+        ..L.L.....
+        LLLLLLLLLL
+        L.LLLLLL.L
+        L.LLLLL.LL
+      INPUT
+
+      expect(Day11.part_2(input)).to eq 26
+    end
+
+    it "calculates the correct answer for the input file" do
+      expect(Day11.part_2).to eq 2068
+    end
+  end
 end

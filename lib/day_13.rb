@@ -7,7 +7,6 @@ class Day13
 
     buses.each do |bus|
       candidate = (0..timestamp + bus).step(bus).last - timestamp
-      puts candidate
       if candidate < delta
         delta = candidate
         best_bus = bus
