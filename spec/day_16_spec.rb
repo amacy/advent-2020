@@ -26,13 +26,26 @@ RSpec.describe Day16 do
     end
   end
 
-  # context "part 2" do
-  #   it "calculates the correct answer for the sample input" do
-  #     expect(Day16.part_2("0,3,6")).to eq 175594
-  #   end
-  #
-  #   it "calculates the correct answer for the input file" do
-  #     expect(Day16.part_2).to eq 37312
-  #   end
-  # end
+  context "part 2" do
+    it "calculates the correct answer for the sample input" do
+      input = <<~INPUT
+        class: 0-1 or 4-19
+        row: 0-5 or 8-19
+        seat: 0-13 or 16-19
+
+        your ticket:
+        11,12,13
+
+        nearby tickets:
+        3,9,18
+        15,1,5
+        5,14,9
+      INPUT
+      expect(Day16.part_1(input)).to eq 71
+    end
+
+    it "calculates the correct answer for the input file" do
+      expect(Day16.part_2).to eq 37312
+    end
+  end
 end
