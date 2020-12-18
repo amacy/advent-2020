@@ -5,12 +5,13 @@ class Day17
     current_cubes = original_cubes.dup
 
     6.times do
+      empty_slice = _empty_slice(last_cubes)
+      current_cubes.unshift(empty_slice)
+      current_cubes << empty_slice.map(&:dup)
+
       last_cubes.each_with_index do |slice, z|
-        current_cubes = _add_inactive_cubes(current_cubes)
         slice.each_with_index do |row, x|
           row.each_with_index do |cube, y|
-            if
-            end
           end
         end
       end
@@ -18,6 +19,11 @@ class Day17
   end
 
   def self.part_2(input=File.new("config/day_17.txt").read)
+  end
+
+  def self._empty_slice(cubes)
+    length = cubes[0].length
+    [["."] * length] * length
   end
 
   def self._add_inactive_cubes(current_cubes)
@@ -35,12 +41,6 @@ class Day17
   end
 
   def self._parse_input(input)
-    result = [input.split("\n").map { |row| row.split("") }]
-
-    length = result[0].length
-    empty_slice = [["."] * length] * length
-    result.unshift(empty_slice)
-    result << empty_slice.map(&:dup)
-    result
+    [input.split("\n").map { |row| row.split("") }]
   end
 end
