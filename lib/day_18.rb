@@ -16,6 +16,7 @@ class Day18
         symbol = values.shift.to_sym
         next_value = values.shift
         if next_value.include?("(")
+          # loop through remaining values and see if another parens opens before this closes
           next_value = next_value[1..-1].to_i
           loop do
             next_symbol = values.shift.to_sym
