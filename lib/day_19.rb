@@ -74,22 +74,30 @@ class Day19
       section.split("\n")
     end
 
-    rules = rules.map do |rule|
+    queue = []
+
+    rule_to_number = rules.inject({}) do |hash, rule|
       number, remainder = rule.split(":")
       if remainder.match(/(a|b)/)
         value = remainder.match(/(a|b)/)[1]
+        hash[value] = number
       else
-        children = remainder.split(" | ")
-        children = children.map do |section|
-          section.split(" ").map(&:to_i)
-        end
+        queue << [number.dup, remainder.dup]
       end
-      Rule.new(
-        number.to_i,
-        children,
-        value,
-      )
-    end.sort { |r1, r2| r1.number <=> r2.number }
+    end
+
+    while queue.length > 0 do
+      number, rule = queue.shift
+      rule_to_number.map do |_rule, _number|
+        rule.gsub!(_number, _rule)
+      end
+
+      if rule.match(/[0-9]/)
+        queue << [number, rule]
+      else
+        rule_to_numnber[rule] = number
+      end
+    end
 
     [rules, messages]
   end
