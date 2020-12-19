@@ -1,21 +1,15 @@
 require "set"
 
 class Day19
-  Rule = Struct.new(:number, :children, :value) do
-    def match?(message)
-
-    end
-  end
-
+  Rule = Struct.new(:number, :children, :value, :length, :result)
 
   def self.part_1(input=File.new("config/day_19.txt").read)
     rules, messages = _parse_input(input)
+    rule_zero = rules[0]
 
-    results = rules[0].children.map do |indices|
-      indices.map do |index|
-        _find_value(rules, index)
-      end
-    end.flatten(1)
+    results = rule_zero.children.flatten.map do |index|
+      rules[index].result = _find_value(rules, index)
+    end
 
     #  ["a",
     #  [[[["a", "a"], ["b", "b"]], [["a", "b"], ["b", "a"]]],
