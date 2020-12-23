@@ -62,7 +62,7 @@ RSpec.describe Day22 do
     end
 
     it "calculates the correct answer for the input file" do
-      expect(Day22.part_2).to eq 37312
+      expect(Day22.part_2).to eq 31436
     end
   end
 end

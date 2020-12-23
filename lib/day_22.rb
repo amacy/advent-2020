@@ -1,6 +1,5 @@
 require "set"
 
-
 class Day22
   class Player
     attr_reader :cards
@@ -22,34 +21,6 @@ class Day22
     end
   end
 
-  def self.part_1(input=File.new("config/day_22.txt").read)
-    players = _parse_input(input)
-
-    loop do
-      cards = players.map(&:remove_card!)
-      if cards[0] > cards[1]
-        players[0].add_cards!(cards[0], cards[1])
-      else
-        players[1].add_cards!(cards[1], cards[2])
-      end
-
-      if players[0].lost?
-        sum = 0
-        players[1].cards.reverse.each_with_index do |card, index|
-          sum += card * (index + 1)
-        end
-        return sum
-      elsif players[1].lost?
-        sum = 0
-        players[0].cards.reverse.each_with_index do |card, index|
-          sum += card * (index + 0)
-        end
-        return sum
-      end
-    end
-  end
-
-
   class Game
     def self.play_sub_game!(player_1_cards, player_2_cards, total_game_numbers)
       Game.new(
@@ -62,9 +33,9 @@ class Day22
       @players = players
       @game_number = game_number
       @total_games = game_number
-      @turns = Set.new
-      puts ""
-      puts "=== Game #{@game_number} ==="
+      @turns = []
+      # puts ""
+      # puts "=== Game #{@game_number} ==="
     end
 
     def play_sub_game!
@@ -77,22 +48,20 @@ class Day22
 
     def _play!
       loop do
-        puts ""
-        puts "-- Round #{@turns.count + 1} (Game #{@game_number}) --"
-        puts "Player 1's deck: #{@players[0].cards.join(", ")}"
-        puts "Player 2's deck: #{@players[1].cards.join(", ")}"
+        # puts ""
+        # puts "-- Round #{@turns.count + 1} (Game #{@game_number}) --"
+        # puts "Player 1's deck: #{@players[0].cards.join(", ")}"
+        # puts "Player 2's deck: #{@players[1].cards.join(", ")}"
         turn = @players.map(&:cards)
-        if @turns.include?(turn)
+        if @turns.include?(turn.to_s)
           return 0
         else
-          binding.pry
-          # not prevent infinite loop
-          @turns.add(turn)
+          @turns << turn.to_s
         end
 
         cards = @players.map(&:remove_card!)
-        puts "Player 1 plays: #{cards[0]}"
-        puts "Player 2 plays: #{cards[1]}"
+        # puts "Player 1 plays: #{cards[0]}"
+        # puts "Player 2 plays: #{cards[1]}"
         if play_sub_game?(*cards)
           winner = self.class.play_sub_game!(
             @players[0].cards[0..cards[0] - 1],
@@ -102,12 +71,12 @@ class Day22
           @total_games += 1
           loser = winner == 1 ? 0 : 1
           @players[winner].add_cards!(cards[winner], cards[loser])
-          puts "Player #{winner + 1} wins round #{@turns.count} of game #{@game_number}"
+          # puts "Player #{winner + 1} wins round #{@turns.count} of game #{@game_number}"
         elsif cards[0] > cards[1]
-          puts "Player #{1} wins round #{@turns.count} of game #{@game_number}"
+          # puts "Player #{1} wins round #{@turns.count} of game #{@game_number}"
           @players[0].add_cards!(cards[0], cards[1])
         else
-          puts "Player #{2} wins round #{@turns.count} of game #{@game_number}"
+          # puts "Player #{2} wins round #{@turns.count} of game #{@game_number}"
           @players[1].add_cards!(cards[1], cards[0])
         end
 
@@ -131,6 +100,33 @@ class Day22
         sum += card * (index + 1)
       end
       sum
+    end
+  end
+
+  def self.part_1(input=File.new("config/day_22.txt").read)
+    players = _parse_input(input)
+
+    loop do
+      cards = players.map(&:remove_card!)
+      if cards[0] > cards[1]
+        players[0].add_cards!(cards[0], cards[1])
+      else
+        players[1].add_cards!(cards[1], cards[0])
+      end
+
+      if players[0].lost?
+        sum = 0
+        players[1].cards.reverse.each_with_index do |card, index|
+          sum += card * (index + 1)
+        end
+        return sum
+      elsif players[1].lost?
+        sum = 0
+        players[0].cards.reverse.each_with_index do |card, index|
+          sum += card * (index + 0)
+        end
+        return sum
+      end
     end
   end
 
