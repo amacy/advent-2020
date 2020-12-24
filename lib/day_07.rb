@@ -25,20 +25,38 @@ class Day07
   def self.part_2(input=File.new("config/day_07.txt").read)
     bags = _parse_input(input)
 
-    _traverse(bags[MY_BAG], bags)
+    child_to_parent = {}
+    empty_bags = bags.inject({}) do |hash, (name, bag)|
+      bag.contents.each do |inner_bag_name, count|
+        parents[inner_bag_name] ||= []
+        parents[inner_bag_name] << name
+      end
+      hash[name] = bag if bag.contents.empty?
+      hash
+    end
+
+    empty_bags.each do |child_name, bag|
+      child_to_parent[child_name].each do |parent_name|
+
+      end
+    end
+
+    # binding.pry
+    # _traverse(bags[MY_BAG], bags, 0)
   end
 
-  def self._traverse(current_bag, bags)
-    total = 0
+  def self._traverse(current_bag, bags, total)
     current_bag.contents.each do |inner_bag_name, count|
       inner_bag = bags[inner_bag_name]
       if inner_bag.contents.values.sum == 0
-        total += count
+        puts "adding #{count} for #{inner_bag_name}"
+        return total + count
       else
-        total += count * _traverse(inner_bag, bags)
+        traverse = _traverse(inner_bag, bags)
+        puts "adding #{count} * #{traverse} for #{inner_bag_name}"
+        reurn total += count * _traverse(inner_bag, bags)
       end
     end
-    total
   end
 
   def self._navigate_bags(bags, bag_contents)
