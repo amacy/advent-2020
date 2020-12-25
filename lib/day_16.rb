@@ -2,15 +2,15 @@ require "set"
 
 class Day16
   def self.part_1(input=File.new("config/day_16.txt").read)
-    ranges, _, nearby_tickets = _parse_input(input)
+    key_to_ranges, _, nearby_tickets = _parse_input(input)
 
-    _invalid_values(ranges, nearby_tickets).sum
+    _invalid_values(key_to_ranges, nearby_tickets).sum
   end
 
   def self.part_2(input=File.new("config/day_16.txt").read)
-    ranges, my_ticket, nearby_tickets = _parse_input(input)
+    key_to_ranges, my_ticket, nearby_tickets = _parse_input(input)
 
-    invalid_values = _invalid_values(ranges, nearby_tickets)
+    invalid_values = _invalid_values(key_to_ranges, nearby_tickets)
     valid_tickets = nearby_tickets.select do |ticket|
       invalid_values.each do |value|
         break false if ticket.include?(value)
@@ -18,46 +18,41 @@ class Day16
       true
     end
 
-    tickets_data = {}
-
-    ranges.each do |key, rs|
-      rs.each do |range|
-        valid_tickets.each_with_index do |ticket, index|
-          ticket.each do |value|
-            if range.include?(value)
-              tickets_data[key] ||= {}
-              tickets_data[key][index] ||= 0
-              tickets_data[key][index] += 1
-            end
+    ticket_data = key_to_ranges.inject({}) do |hash, (key, ranges)|
+      hash[key] ||= {}
+      valid_tickets.each_with_index do |ticket, ticket_number|
+        ticket.each_with_index do |value, position|
+          hash[key][position] ||= Set.new
+          ranges.each do |range|
+            hash[key][position] << ticket_number if range.include?(value)
           end
         end
       end
+      hash
     end
 
-    final_mapping = {}
-
-    tickets_data.select do |key, index_count|
-      index_count.each do |index, count|
-        binding.pry
-        if count == my_ticket.length
-          final_mapping[key] = index
+    final_mapping = ticket_data.inject({}) do |hash, (key, position_to_ticket_indices)|
+      position_to_ticket_indices.each do |position, indices|
+        if indices.count == my_ticket.count
+          hash[key] = position
         end
       end
+      hash
     end
+    binding.pry
 
     departure_keys = final_mapping.keys.select { |k| k.match(/^departure/) }
     departure_keys.map do |key|
       index = final_mapping[key]
-      binding.pry
       my_ticket[index]
     end.inject(&:+)
   end
 
-  def self._invalid_values(ranges, nearby_tickets)
+  def self._invalid_values(key_to_ranges, nearby_tickets)
     invalid = []
     nearby_tickets.each do |tickets|
       tickets.each do |n|
-        if ranges.values.flatten.select { |r| r.include?(n) }.empty?
+        if key_to_ranges.values.flatten.select { |r| r.include?(n) }.empty?
           invalid << n
         end
       end
@@ -70,7 +65,7 @@ class Day16
       section.split("\n")
     end
 
-    ranges = notes[0].inject({}) do |hash, line|
+    key_to_ranges = notes[0].inject({}) do |hash, line|
       matches = line.match(/(\d+)-(\d+) or (\d+)-(\d+)/)
       key = line.split(":").first
       hash[key] = [matches[1].to_i..matches[2].to_i, matches[3].to_i..matches[4].to_i]
@@ -83,6 +78,6 @@ class Day16
       line.split(",").map(&:to_i)
     end
 
-    [ranges, my_ticket, nearby_tickets]
+    [key_to_ranges, my_ticket, nearby_tickets]
   end
 end

@@ -41,7 +41,7 @@ RSpec.describe Day16 do
         15,1,5
         5,14,9
       INPUT
-      expect(Day16.part_1(input)).to eq 71
+      expect(Day16.part_2(input)).to eq 71
     end
 
     it "calculates the correct answer for the input file" do
